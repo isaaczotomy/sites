@@ -1,0 +1,2006 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>École Arc-en-Ciel — Primaire</title>
+    <style>
+        /* ============================================================
+           🎨 RESET & VARIABLES + DARK MODE
+        ============================================================ */
+        *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+        :root {
+            --sun: #FFD93D;
+            --sky: #6EC6FF;
+            --grass: #4ECB71;
+            --coral: #FF6B6B;
+            --lavender: #A78BFA;
+            --peach: #FBBF24;
+            --ocean: #3B82F6;
+            --pink: #F472B6;
+            --mint: #34D399;
+            --dark: #1E293B;
+            --light: #F8FAFC;
+            --gray: #64748B;
+            --white: #FFFFFF;
+            --radius: 20px;
+            --shadow: 0 10px 40px rgba(0,0,0,0.08);
+            --shadow-lg: 0 25px 60px rgba(0,0,0,0.12);
+            --bg-primary: #F8FAFC;
+            --bg-secondary: #FFFFFF;
+            --bg-tertiary: #EEF2FF;
+            --text-primary: #1E293B;
+            --text-secondary: #64748B;
+            --card-bg: #FFFFFF;
+            --card-hover: #FFFFFF;
+            --input-bg: #F8FAFC;
+            --border-color: rgba(0,0,0,0.06);
+            --glass-bg: rgba(255,255,255,0.92);
+            --transition-theme: background 0.5s ease, color 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0F172A;
+            --bg-secondary: #1E293B;
+            --bg-tertiary: #162033;
+            --text-primary: #F1F5F9;
+            --text-secondary: #94A3B8;
+            --card-bg: #1E293B;
+            --card-hover: #253349;
+            --input-bg: #162033;
+            --border-color: rgba(255,255,255,0.08);
+            --glass-bg: rgba(15,23,42,0.92);
+            --dark: #F1F5F9;
+            --light: #0F172A;
+            --gray: #94A3B8;
+            --white: #1E293B;
+            --shadow: 0 10px 40px rgba(0,0,0,0.3);
+            --shadow-lg: 0 25px 60px rgba(0,0,0,0.4);
+        }
+
+        html { scroll-behavior: smooth; overflow-x: hidden; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            overflow-x: hidden;
+            transition: var(--transition-theme);
+        }
+
+        /* ============================================================
+           🔄 SCROLL PROGRESS BAR
+        ============================================================ */
+        .scroll-progress {
+            position: fixed;
+            top: 4px;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--coral), var(--sun), var(--grass), var(--sky), var(--lavender));
+            z-index: 100002;
+            width: 0%;
+            transition: width 0.1s linear;
+            border-radius: 0 2px 2px 0;
+        }
+
+        /* ============================================================
+           🌈 RAINBOW BAR
+        ============================================================ */
+        .rainbow-bar {
+            position: fixed; top:0; left:0; width:100%; height:4px; z-index:100001;
+            background: linear-gradient(90deg, var(--coral), var(--sun), var(--grass), var(--sky), var(--lavender), var(--pink), var(--coral));
+            background-size: 200% 100%;
+            animation: rainbowMove 4s linear infinite;
+        }
+        @keyframes rainbowMove { 0%{background-position:0% 0%} 100%{background-position:200% 0%} }
+
+        /* ============================================================
+           ✨ CURSOR FOLLOWER
+        ============================================================ */
+        .cursor-follower {
+            position:fixed; width:35px; height:35px; border-radius:50%;
+            background: radial-gradient(circle, rgba(167,139,250,0.4), transparent);
+            pointer-events:none; z-index:99999;
+            transition: transform 0.15s ease-out, width 0.3s, height 0.3s;
+            transform: translate(-50%,-50%);
+            mix-blend-mode: screen;
+        }
+        .cursor-follower.active { width:60px; height:60px; background: radial-gradient(circle, rgba(255,107,107,0.3), transparent); }
+
+        /* ============================================================
+           🔮 FLOATING SHAPES
+        ============================================================ */
+        .floating-shapes { position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0; overflow:hidden; }
+        .shape { position:absolute; border-radius:50%; opacity:0.06; animation: floatShape 20s infinite ease-in-out; }
+        .shape:nth-child(1){width:300px;height:300px;background:var(--coral);top:10%;left:-5%;animation-duration:25s;}
+        .shape:nth-child(2){width:200px;height:200px;background:var(--sky);top:60%;right:-3%;animation-delay:-5s;animation-duration:20s;}
+        .shape:nth-child(3){width:150px;height:150px;background:var(--sun);top:30%;left:50%;animation-delay:-10s;animation-duration:22s;}
+        .shape:nth-child(4){width:250px;height:250px;background:var(--lavender);bottom:10%;left:20%;animation-delay:-7s;animation-duration:28s;}
+        .shape:nth-child(5){width:180px;height:180px;background:var(--mint);top:80%;right:30%;animation-delay:-3s;animation-duration:18s;}
+        @keyframes floatShape {
+            0%,100%{transform:translate(0,0) rotate(0deg) scale(1)}
+            25%{transform:translate(80px,-60px) rotate(90deg) scale(1.1)}
+            50%{transform:translate(-40px,80px) rotate(180deg) scale(0.9)}
+            75%{transform:translate(60px,40px) rotate(270deg) scale(1.05)}
+        }
+
+        /* ============================================================
+           🌊 SVG WAVE SEPARATORS
+        ============================================================ */
+        .wave-separator { width:100%; overflow:hidden; line-height:0; position:relative; z-index:2; }
+        .wave-separator svg { display:block; width:100%; height:80px; }
+        .wave-separator.flip { transform: rotate(180deg); }
+
+        /* ============================================================
+           📢 ANNOUNCEMENT BAR
+        ============================================================ */
+        .announcement-bar {
+            background: linear-gradient(90deg, var(--ocean), var(--lavender));
+            color: white;
+            text-align: center;
+            padding: 10px 20px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            position: relative;
+            z-index: 1001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            animation: announcePulse 3s infinite ease-in-out;
+        }
+        .announcement-bar .close-announce {
+            position: absolute; right: 15px; top: 50%; transform: translateY(-50%);
+            background: none; border: none; color: white; cursor: pointer; font-size: 1.2rem;
+            opacity: 0.7; transition: opacity 0.3s;
+        }
+        .announcement-bar .close-announce:hover { opacity: 1; }
+        @keyframes announcePulse { 0%,100%{opacity:1} 50%{opacity:0.92} }
+        .announcement-bar.hidden { display: none; }
+
+        /* ============================================================
+           🧭 NAVBAR
+        ============================================================ */
+        .navbar {
+            position:fixed; top:0; left:0; width:100%; z-index:1000;
+            padding:15px 40px; display:flex; justify-content:space-between; align-items:center;
+            transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+            background: transparent;
+        }
+        .navbar.has-announce { top: 42px; }
+        .navbar.scrolled {
+            background: var(--glass-bg);
+            backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            box-shadow: 0 4px 30px rgba(0,0,0,0.06);
+            padding: 10px 40px;
+            top: 0 !important;
+        }
+
+        .nav-logo { display:flex; align-items:center; gap:12px; text-decoration:none; color:var(--text-primary); }
+        .nav-logo-icon {
+            width:45px; height:45px;
+            background: linear-gradient(135deg, var(--coral), var(--sun));
+            border-radius:14px; display:flex; align-items:center; justify-content:center;
+            font-size:22px; animation: logoSpin 6s infinite ease-in-out;
+            transition: transform 0.3s;
+        }
+        .nav-logo-icon:hover { transform: rotate(20deg) scale(1.1); }
+        @keyframes logoSpin { 0%,100%{transform:rotate(0)} 25%{transform:rotate(5deg)} 75%{transform:rotate(-5deg)} }
+
+        .nav-logo-text { font-size:1.3rem; font-weight:800; letter-spacing:-0.5px; }
+        .nav-logo-text span {
+            background: linear-gradient(135deg, var(--coral), var(--lavender));
+            -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+        }
+
+        .nav-center { display:flex; gap:6px; list-style:none; align-items:center; }
+        .nav-center a {
+            text-decoration:none; color:var(--text-primary); font-weight:600; font-size:0.9rem;
+            padding:10px 16px; border-radius:12px; transition:all 0.3s ease;
+            position:relative; overflow:hidden;
+        }
+        .nav-center a::after {
+            content:''; position:absolute; bottom:6px; left:50%; width:0; height:3px;
+            background: linear-gradient(90deg, var(--coral), var(--lavender));
+            border-radius:3px; transition: all 0.3s ease; transform: translateX(-50%);
+        }
+        .nav-center a:hover::after { width:50%; }
+        .nav-center a:hover { color: var(--coral); background: rgba(255,107,107,0.06); }
+
+        .nav-right { display:flex; align-items:center; gap:10px; }
+
+        /* Theme toggle */
+        .theme-toggle {
+            width:44px; height:44px; border-radius:12px; border:2px solid var(--border-color);
+            background: var(--card-bg); cursor:pointer; display:flex; align-items:center; justify-content:center;
+            font-size:1.2rem; transition: all 0.3s ease;
+        }
+        .theme-toggle:hover { transform: rotate(20deg) scale(1.1); border-color: var(--lavender); }
+
+        /* Sound toggle */
+        .sound-toggle {
+            width:44px; height:44px; border-radius:12px; border:2px solid var(--border-color);
+            background: var(--card-bg); cursor:pointer; display:flex; align-items:center; justify-content:center;
+            font-size:1.1rem; transition: all 0.3s ease;
+        }
+        .sound-toggle:hover { transform: scale(1.1); border-color: var(--mint); }
+
+        .nav-cta {
+            background: linear-gradient(135deg, var(--coral), var(--lavender)) !important;
+            color: white !important; padding:12px 24px !important; border-radius:14px !important;
+            font-weight:700 !important; transition:all 0.3s ease !important;
+            box-shadow: 0 4px 15px rgba(255,107,107,0.3); text-decoration: none; font-size: 0.9rem;
+            display: inline-flex; align-items: center; gap: 6px;
+        }
+        .nav-cta:hover { transform:translateY(-2px) scale(1.03); box-shadow:0 8px 25px rgba(255,107,107,0.4) !important; }
+
+        .hamburger { display:none; flex-direction:column; gap:5px; cursor:pointer; padding:8px; z-index:1001; background:none; border:none; }
+        .hamburger span { width:28px; height:3px; background:var(--text-primary); border-radius:3px; transition:all 0.3s ease; display:block; }
+        .hamburger.active span:nth-child(1){transform:rotate(45deg) translate(5px,6px)}
+        .hamburger.active span:nth-child(2){opacity:0}
+        .hamburger.active span:nth-child(3){transform:rotate(-45deg) translate(5px,-6px)}
+
+        /* ============================================================
+           🚀 HERO SECTION
+        ============================================================ */
+        .hero {
+            min-height:100vh; display:flex; align-items:center;
+            padding:140px 40px 80px; position:relative; overflow:hidden;
+        }
+
+        .hero-bg-circles { position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; }
+        .hero-circle { position:absolute; border-radius:50%; }
+        .hero-circle:nth-child(1){width:600px;height:600px;background:radial-gradient(circle,rgba(255,217,61,0.15),transparent 70%);top:-10%;right:-10%;animation:heroFloat1 8s infinite ease-in-out}
+        .hero-circle:nth-child(2){width:400px;height:400px;background:radial-gradient(circle,rgba(110,198,255,0.12),transparent 70%);bottom:-5%;left:-5%;animation:heroFloat2 10s infinite ease-in-out}
+        .hero-circle:nth-child(3){width:200px;height:200px;background:radial-gradient(circle,rgba(167,139,250,0.15),transparent 70%);top:40%;left:40%;animation:heroFloat3 7s infinite ease-in-out}
+        @keyframes heroFloat1{0%,100%{transform:translate(0,0)}50%{transform:translate(-30px,30px)}}
+        @keyframes heroFloat2{0%,100%{transform:translate(0,0)}50%{transform:translate(40px,-20px)}}
+        @keyframes heroFloat3{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-20px,20px) scale(1.2)}}
+
+        /* PARTICLE CANVAS */
+        #particleCanvas {
+            position: absolute; top:0; left:0; width:100%; height:100%;
+            pointer-events: none; z-index: 1;
+        }
+
+        .hero-content {
+            max-width:1300px; margin:0 auto; display:grid; grid-template-columns:1fr 1fr;
+            gap:60px; align-items:center; position:relative; z-index:2; width:100%;
+        }
+
+        .hero-text { animation: slideInLeft 1s ease-out; }
+        @keyframes slideInLeft { from{opacity:0;transform:translateX(-60px)} to{opacity:1;transform:translateX(0)} }
+
+        .hero-badge {
+            display:inline-flex; align-items:center; gap:8px;
+            background: rgba(255,107,107,0.1); color:var(--coral);
+            padding:8px 20px; border-radius:50px; font-weight:700; font-size:0.85rem;
+            margin-bottom:25px; animation: badgePulse 3s infinite ease-in-out;
+        }
+        .hero-badge .live-dot {
+            width:8px; height:8px; background: var(--grass); border-radius:50%;
+            animation: livePulse 1.5s infinite;
+        }
+        @keyframes livePulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.5)} }
+        @keyframes badgePulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.03)} }
+
+        .hero-title {
+            font-size: clamp(2.5rem,5vw,4rem); font-weight:900;
+            line-height:1.15; margin-bottom:20px; letter-spacing:-1px;
+        }
+        .hero-title .highlight { position:relative; display:inline-block; }
+        .hero-title .highlight::after {
+            content:''; position:absolute; bottom:5px; left:0; width:100%; height:14px;
+            background: linear-gradient(90deg, rgba(255,217,61,0.4), rgba(255,107,107,0.4));
+            border-radius:4px; z-index:-1; animation: highlightExpand 1.5s ease-out 0.5s both;
+        }
+        @keyframes highlightExpand { from{width:0} to{width:100%} }
+
+        /* TYPEWRITER EFFECT */
+        .typewriter-container { display: inline; }
+        .typewriter {
+            display: inline;
+            border-right: 3px solid var(--coral);
+            animation: blink 0.8s infinite;
+            color: var(--coral);
+            font-weight: 900;
+        }
+        @keyframes blink { 0%,100%{border-color:var(--coral)} 50%{border-color:transparent} }
+
+        .hero-subtitle { font-size:1.15rem; color:var(--text-secondary); margin-bottom:35px; max-width:500px; line-height:1.8; }
+
+        .hero-buttons { display:flex; gap:15px; flex-wrap:wrap; }
+
+        .btn {
+            display:inline-flex; align-items:center; gap:10px; padding:16px 32px;
+            border-radius:16px; font-weight:700; font-size:1rem; text-decoration:none;
+            transition:all 0.4s cubic-bezier(0.4,0,0.2,1); border:none; cursor:pointer;
+            position:relative; overflow:hidden; font-family: inherit;
+        }
+        .btn-primary {
+            background:linear-gradient(135deg,var(--coral),#FF8E8E); color:white;
+            box-shadow:0 8px 30px rgba(255,107,107,0.35);
+        }
+        .btn-primary:hover { transform:translateY(-3px) scale(1.02); box-shadow:0 12px 40px rgba(255,107,107,0.45); }
+
+        /* MAGNETIC BUTTON RIPPLE */
+        .btn-primary .ripple {
+            position:absolute; border-radius:50%; background:rgba(255,255,255,0.3);
+            transform:scale(0); animation: rippleAnim 0.6s linear;
+            pointer-events: none;
+        }
+        @keyframes rippleAnim { to{transform:scale(4);opacity:0} }
+
+        .btn-secondary {
+            background:var(--card-bg); color:var(--text-primary);
+            box-shadow:var(--shadow); border:2px solid var(--border-color);
+        }
+        .btn-secondary:hover { transform:translateY(-3px); box-shadow:var(--shadow-lg); border-color:var(--lavender); }
+
+        /* Play video button */
+        .btn-play {
+            width: 56px; height: 56px; border-radius: 50%;
+            background: white; border: none; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem; box-shadow: var(--shadow-lg);
+            transition: all 0.3s ease; position: relative;
+        }
+        .btn-play::before {
+            content: ''; position: absolute; inset: -6px; border-radius: 50%;
+            border: 2px solid rgba(255,107,107,0.3);
+            animation: playPulse 2s infinite;
+        }
+        @keyframes playPulse { 0%{transform:scale(1);opacity:1} 100%{transform:scale(1.4);opacity:0} }
+        .btn-play:hover { transform: scale(1.1); }
+
+        .hero-visual { position:relative; display:flex; justify-content:center; align-items:center; animation:slideInRight 1s ease-out 0.3s both; }
+        @keyframes slideInRight { from{opacity:0;transform:translateX(60px)} to{opacity:1;transform:translateX(0)} }
+
+        .hero-illustration { width:100%; max-width:500px; aspect-ratio:1; position:relative; }
+
+        .hero-card {
+            position:absolute; background:var(--card-bg); border-radius:var(--radius);
+            box-shadow:var(--shadow-lg); padding:20px 25px; display:flex; align-items:center;
+            gap:15px; animation:cardFloat 4s infinite ease-in-out; transition:transform 0.3s ease;
+        }
+        .hero-card:hover { transform:scale(1.05) !important; }
+        .hero-card:nth-child(1){top:5%;left:5%;animation-delay:0s}
+        .hero-card:nth-child(2){top:35%;right:0%;animation-delay:-1.5s}
+        .hero-card:nth-child(3){bottom:15%;left:10%;animation-delay:-3s}
+        .hero-card:nth-child(4){bottom:45%;left:-5%;animation-delay:-2s}
+        @keyframes cardFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+
+        .hero-card-icon {
+            width:50px; height:50px; border-radius:14px;
+            display:flex; align-items:center; justify-content:center;
+            font-size:24px; flex-shrink:0;
+        }
+        .hero-card-text h4 { font-size:0.85rem; font-weight:800; margin-bottom:2px; }
+        .hero-card-text p { font-size:0.78rem; color:var(--text-secondary); }
+
+        .hero-center-shape {
+            position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+            width:220px; height:220px; border-radius:50%;
+            background:linear-gradient(135deg,rgba(255,217,61,0.2),rgba(167,139,250,0.2));
+            animation:centerPulse 4s infinite ease-in-out;
+        }
+        .hero-center-shape::before { content:'🏫'; font-size:60px; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); }
+        @keyframes centerPulse { 0%,100%{transform:translate(-50%,-50%) scale(1);opacity:0.8} 50%{transform:translate(-50%,-50%) scale(1.1);opacity:1} }
+
+        /* ============================================================
+           📊 ANIMATED STATS COUNTER
+        ============================================================ */
+        .stats-section {
+            padding: 80px 40px;
+            background: var(--bg-secondary);
+            position: relative; z-index: 2;
+        }
+        .stats-grid {
+            max-width: 1100px; margin: 0 auto;
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px;
+        }
+        .stat-card {
+            text-align: center; padding: 35px 20px;
+            border-radius: var(--radius);
+            background: var(--bg-primary);
+            transition: all 0.4s ease; cursor: default;
+            position: relative; overflow: hidden;
+        }
+        .stat-card::before {
+            content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+            width: 50px; height: 4px; border-radius: 0 0 4px 4px;
+        }
+        .stat-card:nth-child(1)::before { background: var(--coral); }
+        .stat-card:nth-child(2)::before { background: var(--sky); }
+        .stat-card:nth-child(3)::before { background: var(--grass); }
+        .stat-card:nth-child(4)::before { background: var(--lavender); }
+        .stat-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-lg); }
+        .stat-icon { font-size: 2.5rem; margin-bottom: 10px; display: block; }
+        .stat-number {
+            font-size: 2.8rem; font-weight: 900; line-height: 1;
+            background: linear-gradient(135deg, var(--coral), var(--lavender));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .stat-suffix { font-size: 1.5rem; }
+        .stat-label { font-size: 0.95rem; color: var(--text-secondary); font-weight: 600; margin-top: 8px; }
+
+        /* ============================================================
+           🏫 ABOUT SECTION
+        ============================================================ */
+        .about { padding:100px 40px; background:var(--bg-secondary); position:relative; z-index:2; }
+        .about-grid { max-width:1200px; margin:0 auto; display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center; }
+
+        .about-visual { position: relative; }
+        .about-image-container {
+            position: relative; border-radius: 30px; overflow: hidden;
+            background: linear-gradient(135deg, var(--sky), var(--lavender));
+            aspect-ratio: 4/3; display: flex; align-items: center; justify-content: center;
+        }
+        .about-image-container .emoji-scene { font-size: 80px; animation: sceneFloat 5s infinite ease-in-out; }
+        @keyframes sceneFloat { 0%,100%{transform:translateY(0) scale(1)} 50%{transform:translateY(-10px) scale(1.05)} }
+
+        /* GLASSMORPHISM BADGES */
+        .glass-badge {
+            position: absolute; padding: 15px 20px; border-radius: 16px;
+            background: rgba(255,255,255,0.15); backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,255,0.25);
+            font-weight: 700; font-size: 0.9rem; color: white;
+            display: flex; align-items: center; gap: 10px;
+            animation: badgeFloat 4s infinite ease-in-out;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+        .glass-badge:nth-child(2){top:-15px;right:-15px;animation-delay:-1s}
+        .glass-badge:nth-child(3){bottom:-15px;left:-15px;animation-delay:-2.5s}
+        @keyframes badgeFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+
+        .about-content h2 { font-size:2.2rem; font-weight:900; margin-bottom:20px; line-height:1.2; }
+        .about-content p { color:var(--text-secondary); margin-bottom:25px; font-size:1.05rem; }
+
+        .about-features { display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-top:30px; }
+        .about-feature {
+            display:flex; align-items:center; gap:12px; padding:14px 18px; border-radius:14px;
+            background:var(--bg-primary); transition:all 0.3s ease; cursor:default;
+        }
+        .about-feature:hover { transform:translateX(5px); box-shadow:var(--shadow); background:var(--card-bg); }
+        .about-feature-icon { font-size:1.4rem; }
+        .about-feature-text { font-weight:700; font-size:0.9rem; }
+
+        /* ============================================================
+           📸 PHOTO GALLERY with LIGHTBOX
+        ============================================================ */
+        .gallery {
+            padding: 100px 40px;
+            background: var(--bg-tertiary);
+            position: relative; z-index: 2;
+        }
+        .gallery-grid {
+            max-width: 1200px; margin: 0 auto;
+            display: grid; grid-template-columns: repeat(4, 1fr);
+            grid-auto-rows: 200px; gap: 15px;
+        }
+        .gallery-item {
+            border-radius: 16px; overflow: hidden; cursor: pointer;
+            position: relative; transition: all 0.4s ease;
+            background: linear-gradient(135deg, var(--sky), var(--lavender));
+            display: flex; align-items: center; justify-content: center;
+            font-size: 3rem;
+        }
+        .gallery-item::after {
+            content: '🔍'; position: absolute; inset: 0;
+            background: rgba(0,0,0,0.4); display: flex;
+            align-items: center; justify-content: center;
+            font-size: 2rem; opacity: 0; transition: opacity 0.3s;
+        }
+        .gallery-item:hover::after { opacity: 1; }
+        .gallery-item:hover { transform: scale(1.03); z-index: 2; box-shadow: var(--shadow-lg); }
+        .gallery-item.span-2 { grid-column: span 2; }
+        .gallery-item.span-row { grid-row: span 2; }
+
+        .gallery-item:nth-child(1) { background: linear-gradient(135deg, #FFE5E5, #FFC3C3); }
+        .gallery-item:nth-child(2) { background: linear-gradient(135deg, #E5F0FF, #C3DAFF); }
+        .gallery-item:nth-child(3) { background: linear-gradient(135deg, #E5FFE9, #C3FFC9); }
+        .gallery-item:nth-child(4) { background: linear-gradient(135deg, #F0E5FF, #D4C3FF); }
+        .gallery-item:nth-child(5) { background: linear-gradient(135deg, #FFF5E5, #FFE5C3); }
+        .gallery-item:nth-child(6) { background: linear-gradient(135deg, #FFE5F0, #FFC3D8); }
+        .gallery-item:nth-child(7) { background: linear-gradient(135deg, #E5FFF5, #C3FFE8); }
+
+        /* LIGHTBOX */
+        .lightbox {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.9);
+            z-index: 100003; display: flex; align-items: center; justify-content: center;
+            opacity: 0; visibility: hidden; transition: all 0.4s ease;
+            backdrop-filter: blur(10px);
+        }
+        .lightbox.open { opacity: 1; visibility: visible; }
+        .lightbox-content {
+            max-width: 600px; width: 90%;
+            background: var(--card-bg); border-radius: 24px;
+            padding: 40px; text-align: center;
+            transform: scale(0.9); transition: transform 0.4s ease;
+        }
+        .lightbox.open .lightbox-content { transform: scale(1); }
+        .lightbox-emoji { font-size: 6rem; margin-bottom: 20px; }
+        .lightbox-title { font-size: 1.5rem; font-weight: 800; margin-bottom: 10px; }
+        .lightbox-desc { color: var(--text-secondary); margin-bottom: 20px; }
+        .lightbox-close {
+            position: absolute; top: 30px; right: 30px;
+            width: 50px; height: 50px; border-radius: 50%;
+            background: rgba(255,255,255,0.1); border: none; color: white;
+            font-size: 1.5rem; cursor: pointer; transition: all 0.3s;
+        }
+        .lightbox-close:hover { background: var(--coral); transform: rotate(90deg); }
+
+        /* ============================================================
+           📖 PROGRAMS SECTION
+        ============================================================ */
+        .programs { padding:100px 40px; background:var(--bg-primary); position:relative; z-index:2; }
+        .programs-grid {
+            max-width:1200px; margin:0 auto;
+            display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:25px;
+        }
+        .program-card {
+            background:var(--card-bg); border-radius:var(--radius); padding:35px 30px;
+            position:relative; overflow:hidden;
+            transition:all 0.4s cubic-bezier(0.4,0,0.2,1); cursor:pointer;
+            border:2px solid transparent;
+        }
+        .program-card::before {
+            content:''; position:absolute; top:0; left:0; width:100%; height:4px;
+            transition:height 0.4s ease;
+        }
+        .program-card:nth-child(1)::before{background:linear-gradient(90deg,var(--coral),var(--sun))}
+        .program-card:nth-child(2)::before{background:linear-gradient(90deg,var(--sky),var(--ocean))}
+        .program-card:nth-child(3)::before{background:linear-gradient(90deg,var(--grass),var(--mint))}
+        .program-card:nth-child(4)::before{background:linear-gradient(90deg,var(--lavender),var(--pink))}
+        .program-card:nth-child(5)::before{background:linear-gradient(90deg,var(--sun),var(--peach))}
+        .program-card:nth-child(6)::before{background:linear-gradient(90deg,var(--pink),var(--coral))}
+        .program-card:hover::before { height:100%; opacity:0.05; }
+        .program-card:hover { transform:translateY(-8px); box-shadow:var(--shadow-lg); }
+
+        .program-icon {
+            width:65px; height:65px; border-radius:18px;
+            display:flex; align-items:center; justify-content:center;
+            font-size:30px; margin-bottom:20px;
+            transition:transform 0.4s cubic-bezier(0.4,0,0.2,1);
+        }
+        .program-card:hover .program-icon { transform:scale(1.1) rotate(5deg); }
+        .program-card:nth-child(1) .program-icon{background:rgba(255,107,107,0.1)}
+        .program-card:nth-child(2) .program-icon{background:rgba(110,198,255,0.15)}
+        .program-card:nth-child(3) .program-icon{background:rgba(78,203,113,0.12)}
+        .program-card:nth-child(4) .program-icon{background:rgba(167,139,250,0.12)}
+        .program-card:nth-child(5) .program-icon{background:rgba(255,217,61,0.15)}
+        .program-card:nth-child(6) .program-icon{background:rgba(244,114,182,0.12)}
+
+        .program-card h3 { font-size:1.2rem; font-weight:800; margin-bottom:10px; }
+        .program-card p { color:var(--text-secondary); font-size:0.92rem; line-height:1.7; }
+        .program-tag { display:inline-block; margin-top:15px; padding:5px 14px; border-radius:8px; font-size:0.78rem; font-weight:700; }
+        .program-card:nth-child(1) .program-tag{background:rgba(255,107,107,0.1);color:var(--coral)}
+        .program-card:nth-child(2) .program-tag{background:rgba(59,130,246,0.1);color:var(--ocean)}
+        .program-card:nth-child(3) .program-tag{background:rgba(78,203,113,0.1);color:var(--grass)}
+        .program-card:nth-child(4) .program-tag{background:rgba(167,139,250,0.1);color:var(--lavender)}
+        .program-card:nth-child(5) .program-tag{background:rgba(255,217,61,0.15);color:#B8860B}
+        .program-card:nth-child(6) .program-tag{background:rgba(244,114,182,0.1);color:var(--pink)}
+
+        /* ============================================================
+           📅 INTERACTIVE TIMELINE
+        ============================================================ */
+        .timeline-section {
+            padding: 100px 40px;
+            background: var(--bg-secondary);
+            position: relative; z-index: 2;
+        }
+        .timeline {
+            max-width: 800px; margin: 0 auto;
+            position: relative; padding: 20px 0;
+        }
+        .timeline::before {
+            content: ''; position: absolute; left: 50%; top: 0;
+            width: 3px; height: 100%;
+            background: linear-gradient(180deg, var(--coral), var(--sun), var(--grass), var(--sky), var(--lavender));
+            transform: translateX(-50%); border-radius: 3px;
+        }
+        .timeline-item {
+            display: flex; align-items: center; margin-bottom: 50px;
+            position: relative;
+        }
+        .timeline-item:nth-child(odd) { flex-direction: row-reverse; }
+        .timeline-item:nth-child(odd) .timeline-content { text-align: right; margin-right: 40px; margin-left: 0; }
+        .timeline-item:nth-child(even) .timeline-content { margin-left: 40px; }
+
+        .timeline-dot {
+            position: absolute; left: 50%; transform: translateX(-50%);
+            width: 20px; height: 20px; border-radius: 50%;
+            background: var(--coral); border: 4px solid var(--bg-secondary);
+            z-index: 2; transition: all 0.3s ease;
+        }
+        .timeline-item:nth-child(2) .timeline-dot { background: var(--sun); }
+        .timeline-item:nth-child(3) .timeline-dot { background: var(--grass); }
+        .timeline-item:nth-child(4) .timeline-dot { background: var(--sky); }
+        .timeline-item:hover .timeline-dot { transform: translateX(-50%) scale(1.4); }
+
+        .timeline-content {
+            width: calc(50% - 40px); padding: 25px;
+            background: var(--card-bg); border-radius: var(--radius);
+            box-shadow: var(--shadow); transition: all 0.4s ease;
+        }
+        .timeline-content:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); }
+        .timeline-year {
+            font-size: 0.85rem; font-weight: 700; color: var(--coral);
+            margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px;
+        }
+        .timeline-content h3 { font-size: 1.1rem; font-weight: 800; margin-bottom: 8px; }
+        .timeline-content p { font-size: 0.9rem; color: var(--text-secondary); }
+
+        /* ============================================================
+           👩‍🏫 TEACHERS — 3D FLIP CARDS
+        ============================================================ */
+        .teachers { padding:100px 40px; background:var(--bg-primary); position:relative; z-index:2; }
+        .teachers-grid { max-width:1100px; margin:0 auto; display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:30px; }
+
+        .teacher-card-wrapper { perspective: 1000px; height: 340px; }
+        .teacher-card {
+            width: 100%; height: 100%; position: relative;
+            transform-style: preserve-3d; transition: transform 0.8s cubic-bezier(0.4,0,0.2,1);
+            cursor: pointer;
+        }
+        .teacher-card-wrapper:hover .teacher-card { transform: rotateY(180deg); }
+
+        .teacher-front, .teacher-back {
+            position: absolute; inset: 0; border-radius: var(--radius);
+            backface-visibility: hidden; -webkit-backface-visibility: hidden;
+            display: flex; flex-direction: column; align-items: center;
+            justify-content: center; padding: 30px;
+        }
+        .teacher-front { background: var(--card-bg); box-shadow: var(--shadow); }
+        .teacher-back {
+            background: linear-gradient(135deg, var(--coral), var(--lavender));
+            transform: rotateY(180deg); color: white;
+        }
+
+        .teacher-avatar {
+            width:100px; height:100px; border-radius:50%; margin-bottom:20px;
+            display:flex; align-items:center; justify-content:center;
+            font-size:45px; position:relative; transition:transform 0.4s ease;
+        }
+        .teacher-avatar::after {
+            content:''; position:absolute; inset:-4px; border-radius:50%;
+            border:3px dashed rgba(167,139,250,0.3); animation:avatarSpin 10s linear infinite;
+        }
+        @keyframes avatarSpin { to{transform:rotate(360deg)} }
+        .teacher-front:nth-child(1) .teacher-avatar,.teacher-card-wrapper:nth-child(1) .teacher-avatar{background:rgba(255,107,107,0.12)}
+        .teacher-card-wrapper:nth-child(2) .teacher-avatar{background:rgba(110,198,255,0.15)}
+        .teacher-card-wrapper:nth-child(3) .teacher-avatar{background:rgba(78,203,113,0.12)}
+        .teacher-card-wrapper:nth-child(4) .teacher-avatar{background:rgba(167,139,250,0.12)}
+
+        .teacher-front h3 { font-size:1.1rem; font-weight:800; margin-bottom:5px; }
+        .teacher-front .role { color:var(--coral); font-weight:700; font-size:0.85rem; }
+
+        .teacher-back h3 { font-size: 1.2rem; margin-bottom: 12px; }
+        .teacher-back p { font-size: 0.9rem; opacity: 0.9; text-align: center; line-height: 1.6; }
+        .teacher-back .teacher-skills { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-top: 15px; }
+        .teacher-back .skill-tag {
+            padding: 4px 12px; background: rgba(255,255,255,0.2); border-radius: 20px;
+            font-size: 0.75rem; font-weight: 600;
+        }
+        .flip-hint {
+            font-size: 0.75rem; color: var(--text-secondary); margin-top: 12px;
+            opacity: 0.6; font-weight: 600;
+        }
+
+        /* ============================================================
+           📅 EVENTS SECTION
+        ============================================================ */
+        .events { padding:100px 40px; background:var(--bg-tertiary); position:relative; z-index:2; }
+        .events-container { max-width:900px; margin:0 auto; }
+        .event-item {
+            display:flex; gap:25px; align-items:flex-start; padding:30px;
+            background:var(--card-bg); border-radius:var(--radius); margin-bottom:20px;
+            transition:all 0.4s ease; cursor:pointer; border-left:4px solid transparent;
+        }
+        .event-item:nth-child(1){border-left-color:var(--coral)}
+        .event-item:nth-child(2){border-left-color:var(--sky)}
+        .event-item:nth-child(3){border-left-color:var(--grass)}
+        .event-item:nth-child(4){border-left-color:var(--lavender)}
+        .event-item:hover { transform:translateX(8px); box-shadow:var(--shadow-lg); }
+
+        .event-date {
+            flex-shrink:0; text-align:center; padding:15px 20px; border-radius:16px;
+            background:var(--bg-primary); min-width:80px; transition:all 0.3s;
+        }
+        .event-item:hover .event-date { background:linear-gradient(135deg,var(--coral),var(--lavender)); color:white; }
+        .event-item:hover .event-date .day,
+        .event-item:hover .event-date .month { color:white; }
+        .event-date .day { font-size:1.8rem; font-weight:900; line-height:1; transition:color 0.3s; }
+        .event-date .month { font-size:0.8rem; font-weight:700; text-transform:uppercase; color:var(--text-secondary); transition:color 0.3s; }
+
+        .event-info h3 { font-size:1.15rem; font-weight:800; margin-bottom:6px; }
+        .event-info p { color:var(--text-secondary); font-size:0.92rem; margin-bottom:10px; }
+        .event-meta { display:flex; gap:15px; flex-wrap:wrap; }
+        .event-meta span { display:inline-flex; align-items:center; gap:5px; font-size:0.8rem; color:var(--text-secondary); font-weight:600; }
+
+        /* ============================================================
+           ❓ FAQ ACCORDION
+        ============================================================ */
+        .faq { padding: 100px 40px; background: var(--bg-secondary); position: relative; z-index: 2; }
+        .faq-container { max-width: 800px; margin: 0 auto; }
+        .faq-item {
+            background: var(--card-bg); border-radius: 16px; margin-bottom: 12px;
+            overflow: hidden; border: 2px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+        .faq-item.active { border-color: var(--lavender); box-shadow: var(--shadow); }
+        .faq-question {
+            width: 100%; padding: 22px 25px; background: none; border: none;
+            font-size: 1rem; font-weight: 700; text-align: left;
+            cursor: pointer; display: flex; justify-content: space-between;
+            align-items: center; color: var(--text-primary); font-family: inherit;
+            transition: color 0.3s;
+        }
+        .faq-question:hover { color: var(--coral); }
+        .faq-icon {
+            width: 30px; height: 30px; border-radius: 8px;
+            background: var(--bg-primary); display: flex; align-items: center;
+            justify-content: center; font-size: 1.2rem; flex-shrink: 0;
+            transition: all 0.4s ease;
+        }
+        .faq-item.active .faq-icon { transform: rotate(45deg); background: var(--lavender); color: white; }
+        .faq-answer {
+            max-height: 0; overflow: hidden; transition: max-height 0.5s cubic-bezier(0.4,0,0.2,1), padding 0.5s;
+            padding: 0 25px;
+        }
+        .faq-item.active .faq-answer { max-height: 300px; padding: 0 25px 22px; }
+        .faq-answer p { color: var(--text-secondary); font-size: 0.95rem; line-height: 1.8; }
+
+        /* ============================================================
+           ⭐ TESTIMONIALS with CAROUSEL
+        ============================================================ */
+        .testimonials { padding:100px 40px; background:var(--bg-primary); position:relative; z-index:2; }
+        .carousel-container { max-width: 900px; margin: 0 auto; position: relative; overflow: hidden; }
+        .carousel-track {
+            display: flex; transition: transform 0.6s cubic-bezier(0.4,0,0.2,1);
+        }
+        .carousel-slide {
+            min-width: 100%; padding: 0 20px;
+        }
+        .testimonial-card {
+            padding:40px; border-radius:var(--radius); background:var(--card-bg);
+            box-shadow: var(--shadow); position:relative; overflow:hidden;
+            border: 2px solid var(--border-color);
+        }
+        .testimonial-card::before {
+            content:'"'; position:absolute; top:15px; right:25px; font-size:6rem;
+            font-weight:900; opacity:0.04; line-height:1; font-family:Georgia,serif;
+        }
+        .testimonial-stars { margin-bottom:15px; font-size:1.1rem; letter-spacing:3px; }
+        .testimonial-text { font-size:1.1rem; margin-bottom:25px; font-style:italic; line-height:1.8; }
+        .testimonial-author { display:flex; align-items:center; gap:15px; }
+        .testimonial-avatar {
+            width:55px; height:55px; border-radius:50%;
+            display:flex; align-items:center; justify-content:center; font-size:24px;
+        }
+        .carousel-slide:nth-child(1) .testimonial-avatar{background:rgba(255,107,107,0.12)}
+        .carousel-slide:nth-child(2) .testimonial-avatar{background:rgba(110,198,255,0.15)}
+        .carousel-slide:nth-child(3) .testimonial-avatar{background:rgba(78,203,113,0.12)}
+        .testimonial-name { font-weight:800; font-size:1rem; }
+        .testimonial-role { font-size:0.85rem; color:var(--text-secondary); }
+
+        .carousel-controls { display: flex; justify-content: center; gap: 15px; margin-top: 30px; }
+        .carousel-btn {
+            width: 50px; height: 50px; border-radius: 50%;
+            background: var(--card-bg); border: 2px solid var(--border-color);
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem; transition: all 0.3s;
+        }
+        .carousel-btn:hover { background: var(--coral); color: white; border-color: var(--coral); transform: scale(1.1); }
+        .carousel-dots { display: flex; gap: 8px; align-items: center; }
+        .carousel-dot {
+            width: 10px; height: 10px; border-radius: 50%;
+            background: var(--border-color); border: none; cursor: pointer;
+            transition: all 0.3s;
+        }
+        .carousel-dot.active { background: var(--coral); width: 30px; border-radius: 5px; }
+
+        /* ============================================================
+           🎬 VIDEO MODAL
+        ============================================================ */
+        .video-modal {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.92);
+            z-index: 100004; display: flex; align-items: center; justify-content: center;
+            opacity: 0; visibility: hidden; transition: all 0.4s ease;
+            backdrop-filter: blur(15px);
+        }
+        .video-modal.open { opacity: 1; visibility: visible; }
+        .video-placeholder {
+            width: 90%; max-width: 800px; aspect-ratio: 16/9;
+            background: var(--dark); border-radius: 20px;
+            display: flex; align-items: center; justify-content: center;
+            flex-direction: column; gap: 15px; color: white;
+            transform: scale(0.9); transition: transform 0.4s;
+        }
+        .video-modal.open .video-placeholder { transform: scale(1); }
+        .video-placeholder .play-icon { font-size: 4rem; }
+        .video-placeholder p { font-size: 1.1rem; opacity: 0.7; }
+
+        /* ============================================================
+           🔥 CTA SECTION
+        ============================================================ */
+        .cta-section {
+            padding:100px 40px; position:relative; overflow:hidden;
+            background: linear-gradient(135deg, #1E293B 0%, #334155 100%);
+        }
+        .cta-shapes { position:absolute; inset:0; pointer-events:none; }
+        .cta-shape { position:absolute; border-radius:50%; opacity:0.06; background:white; }
+        .cta-shape:nth-child(1){width:300px;height:300px;top:-10%;right:-5%;animation:floatShape 15s infinite ease-in-out}
+        .cta-shape:nth-child(2){width:200px;height:200px;bottom:-10%;left:10%;animation:floatShape 20s infinite ease-in-out reverse}
+        .cta-shape:nth-child(3){width:100px;height:100px;top:30%;left:40%;animation:floatShape 12s infinite ease-in-out}
+
+        .cta-content { max-width:700px; margin:0 auto; text-align:center; position:relative; z-index:2; }
+        .cta-content h2 { font-size:clamp(2rem,4vw,2.8rem); color:white; font-weight:900; margin-bottom:20px; }
+        .cta-content p { color:rgba(255,255,255,0.7); font-size:1.1rem; margin-bottom:35px; }
+        .cta-buttons { display:flex; gap:15px; justify-content:center; flex-wrap:wrap; }
+        .btn-cta-primary { background:linear-gradient(135deg,var(--coral),var(--sun)); color:white; box-shadow:0 8px 30px rgba(255,107,107,0.3); }
+        .btn-cta-primary:hover { transform:translateY(-3px) scale(1.03); box-shadow:0 12px 40px rgba(255,107,107,0.5); }
+        .btn-cta-secondary {
+            background:rgba(255,255,255,0.1); color:white;
+            border:2px solid rgba(255,255,255,0.2); backdrop-filter:blur(10px);
+        }
+        .btn-cta-secondary:hover { background:rgba(255,255,255,0.2); transform:translateY(-3px); }
+
+        /* ============================================================
+           ✉️ CONTACT SECTION
+        ============================================================ */
+        .contact { padding:100px 40px; background:var(--bg-primary); position:relative; z-index:2; }
+        .contact-grid { max-width:1100px; margin:0 auto; display:grid; grid-template-columns:1fr 1.2fr; gap:60px; align-items:start; }
+        .contact-info-cards { display:flex; flex-direction:column; gap:20px; }
+        .contact-info-card {
+            display:flex; align-items:center; gap:18px; padding:22px 25px;
+            background:var(--card-bg); border-radius:16px; transition:all 0.3s ease; cursor:pointer;
+            border: 2px solid var(--border-color);
+        }
+        .contact-info-card:hover { transform:translateX(5px); box-shadow:var(--shadow); border-color: var(--lavender); }
+        .contact-info-icon { width:55px; height:55px; border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:24px; flex-shrink:0; }
+        .contact-info-card:nth-child(1) .contact-info-icon{background:rgba(255,107,107,0.1)}
+        .contact-info-card:nth-child(2) .contact-info-icon{background:rgba(110,198,255,0.15)}
+        .contact-info-card:nth-child(3) .contact-info-icon{background:rgba(78,203,113,0.12)}
+        .contact-info-card:nth-child(4) .contact-info-icon{background:rgba(167,139,250,0.12)}
+        .contact-info-card h4 { font-weight:800; font-size:0.95rem; margin-bottom:3px; }
+        .contact-info-card p { color:var(--text-secondary); font-size:0.88rem; }
+
+        /* MAP Placeholder */
+        .map-container {
+            margin-top: 20px; border-radius: 16px; overflow: hidden;
+            height: 200px; background: linear-gradient(135deg, var(--sky), var(--lavender));
+            display: flex; align-items: center; justify-content: center;
+            font-size: 3rem; position: relative; cursor: pointer;
+            transition: all 0.3s;
+        }
+        .map-container:hover { transform: scale(1.02); }
+        .map-container::after {
+            content: 'Voir sur Google Maps'; position: absolute;
+            bottom: 15px; left: 50%; transform: translateX(-50%);
+            background: rgba(0,0,0,0.5); color: white; padding: 6px 16px;
+            border-radius: 20px; font-size: 0.8rem; font-weight: 600;
+        }
+
+        .contact-form {
+            background:var(--card-bg); padding:40px; border-radius:var(--radius);
+            box-shadow:var(--shadow); border: 2px solid var(--border-color);
+        }
+        .form-group { margin-bottom:20px; }
+        .form-group label { display:block; font-weight:700; font-size:0.9rem; margin-bottom:8px; }
+        .form-group input,.form-group select,.form-group textarea {
+            width:100%; padding:14px 18px; border:2px solid var(--border-color);
+            border-radius:14px; font-size:0.95rem; font-family:inherit;
+            transition:all 0.3s ease; background:var(--input-bg); color:var(--text-primary);
+        }
+        .form-group input:focus,.form-group select:focus,.form-group textarea:focus {
+            outline:none; border-color:var(--lavender);
+            box-shadow:0 0 0 4px rgba(167,139,250,0.1); background:var(--card-bg);
+        }
+        .form-group textarea { min-height:120px; resize:vertical; }
+        .form-row { display:grid; grid-template-columns:1fr 1fr; gap:15px; }
+
+        .btn-submit {
+            width:100%; justify-content:center; display:flex; align-items:center; gap:8px;
+            background:linear-gradient(135deg,var(--coral),var(--lavender)); color:white;
+            padding:16px; font-size:1rem; font-weight:700; border:none; border-radius:14px;
+            cursor:pointer; transition:all 0.4s ease;
+            box-shadow:0 8px 25px rgba(255,107,107,0.3); font-family: inherit;
+        }
+        .btn-submit:hover { transform:translateY(-2px); box-shadow:0 12px 35px rgba(255,107,107,0.4); }
+
+        /* ============================================================
+           📰 NEWSLETTER POPUP
+        ============================================================ */
+        .newsletter-popup {
+            position: fixed; bottom: 30px; left: 30px;
+            background: var(--card-bg); border-radius: 20px;
+            padding: 30px; max-width: 380px; z-index: 9999;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            transform: translateY(200%); transition: transform 0.6s cubic-bezier(0.4,0,0.2,1);
+            border: 2px solid var(--border-color);
+        }
+        .newsletter-popup.visible { transform: translateY(0); }
+        .newsletter-popup .close-nl {
+            position: absolute; top: 12px; right: 12px;
+            background: var(--bg-primary); border: none; width: 30px; height: 30px;
+            border-radius: 50%; cursor: pointer; font-size: 1rem;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.3s;
+        }
+        .newsletter-popup .close-nl:hover { background: var(--coral); color: white; }
+        .newsletter-popup h3 { font-size: 1.2rem; font-weight: 800; margin-bottom: 8px; }
+        .newsletter-popup p { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 15px; }
+        .nl-form { display: flex; gap: 10px; }
+        .nl-form input {
+            flex: 1; padding: 12px 16px; border: 2px solid var(--border-color);
+            border-radius: 12px; font-size: 0.9rem; font-family: inherit;
+            background: var(--input-bg); color: var(--text-primary);
+        }
+        .nl-form input:focus { outline: none; border-color: var(--lavender); }
+        .nl-form button {
+            padding: 12px 20px; border: none; border-radius: 12px;
+            background: linear-gradient(135deg, var(--coral), var(--lavender));
+            color: white; font-weight: 700; cursor: pointer; transition: all 0.3s;
+            font-family: inherit;
+        }
+        .nl-form button:hover { transform: scale(1.05); }
+
+        /* ============================================================
+           🍪 COOKIE CONSENT
+        ============================================================ */
+        .cookie-banner {
+            position: fixed; bottom: 0; left: 0; width: 100%;
+            background: var(--card-bg); padding: 20px 40px;
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 20px; z-index: 99998; box-shadow: 0 -5px 30px rgba(0,0,0,0.1);
+            transform: translateY(100%); transition: transform 0.5s ease;
+            border-top: 2px solid var(--border-color);
+        }
+        .cookie-banner.visible { transform: translateY(0); }
+        .cookie-banner p { font-size: 0.9rem; color: var(--text-secondary); max-width: 600px; }
+        .cookie-banner p a { color: var(--coral); text-decoration: underline; }
+        .cookie-buttons { display: flex; gap: 10px; flex-shrink: 0; }
+        .cookie-btn {
+            padding: 10px 22px; border-radius: 12px; font-weight: 700;
+            font-size: 0.88rem; cursor: pointer; transition: all 0.3s; border: none;
+            font-family: inherit;
+        }
+        .cookie-accept { background: linear-gradient(135deg, var(--coral), var(--lavender)); color: white; }
+        .cookie-accept:hover { transform: scale(1.05); }
+        .cookie-decline { background: var(--bg-primary); color: var(--text-primary); border: 2px solid var(--border-color); }
+        .cookie-decline:hover { border-color: var(--lavender); }
+
+        /* ============================================================
+           🎉 CONFETTI CANVAS
+        ============================================================ */
+        #confettiCanvas {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 100005;
+        }
+
+        /* ============================================================
+           🦶 FOOTER
+        ============================================================ */
+        .footer { background:#0F172A; color:white; padding:80px 40px 30px; position:relative; z-index:2; }
+        .footer-grid { max-width:1200px; margin:0 auto; display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:50px; margin-bottom:60px; }
+        .footer-brand p { color:rgba(255,255,255,0.6); font-size:0.92rem; margin-bottom:20px; max-width:280px; }
+        .footer-socials { display:flex; gap:10px; }
+        .footer-social-link {
+            width:42px; height:42px; border-radius:12px; background:rgba(255,255,255,0.08);
+            display:flex; align-items:center; justify-content:center; text-decoration:none;
+            font-size:18px; transition:all 0.3s ease;
+        }
+        .footer-social-link:hover { background:var(--coral); transform:translateY(-3px); }
+        .footer-column h4 { font-size:1rem; font-weight:800; margin-bottom:20px; }
+        .footer-column ul { list-style:none; }
+        .footer-column ul li { margin-bottom:10px; }
+        .footer-column ul a {
+            color:rgba(255,255,255,0.6); text-decoration:none; font-size:0.9rem;
+            transition:all 0.3s ease; display:inline-flex; align-items:center; gap:5px;
+        }
+        .footer-column ul a:hover { color:var(--sun); transform:translateX(3px); }
+        .footer-bottom { border-top:1px solid rgba(255,255,255,0.08); padding-top:25px; text-align:center; color:rgba(255,255,255,0.4); font-size:0.85rem; }
+        .footer-bottom a { color:var(--sun); text-decoration:none; }
+
+        /* ============================================================
+           🔝 BACK TO TOP
+        ============================================================ */
+        .back-to-top {
+            position:fixed; bottom:30px; right:30px; width:50px; height:50px;
+            border-radius:16px; background:linear-gradient(135deg,var(--coral),var(--lavender));
+            color:white; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center;
+            font-size:20px; box-shadow:0 8px 25px rgba(255,107,107,0.3);
+            transition:all 0.4s ease; opacity:0; transform:translateY(20px); z-index:999;
+        }
+        .back-to-top.visible { opacity:1; transform:translateY(0); }
+        .back-to-top:hover { transform:translateY(-3px); box-shadow:0 12px 35px rgba(255,107,107,0.4); }
+
+        /* ============================================================
+           🎭 SECTION COMMON
+        ============================================================ */
+        section { position:relative; z-index:2; }
+        .section-header { text-align:center; margin-bottom:60px; }
+        .section-tag {
+            display:inline-flex; align-items:center; gap:6px; font-size:0.85rem;
+            font-weight:700; text-transform:uppercase; letter-spacing:2px;
+            margin-bottom:15px; padding:6px 16px; border-radius:50px;
+        }
+        .section-title { font-size:clamp(2rem,4vw,3rem); font-weight:900; letter-spacing:-0.5px; margin-bottom:15px; }
+        .section-desc { font-size:1.1rem; color:var(--text-secondary); max-width:600px; margin:0 auto; }
+
+        /* ============================================================
+           🌀 SCROLL ANIMATIONS
+        ============================================================ */
+        .reveal { opacity:0; transform:translateY(40px); transition:all 0.8s cubic-bezier(0.4,0,0.2,1); }
+        .reveal.active { opacity:1; transform:translateY(0); }
+        .reveal-left { opacity:0; transform:translateX(-40px); transition:all 0.8s cubic-bezier(0.4,0,0.2,1); }
+        .reveal-left.active { opacity:1; transform:translateX(0); }
+        .reveal-right { opacity:0; transform:translateX(40px); transition:all 0.8s cubic-bezier(0.4,0,0.2,1); }
+        .reveal-right.active { opacity:1; transform:translateX(0); }
+        .reveal-scale { opacity:0; transform:scale(0.9); transition:all 0.6s cubic-bezier(0.4,0,0.2,1); }
+        .reveal-scale.active { opacity:1; transform:scale(1); }
+        .stagger-children > * { opacity:0; transform:translateY(30px); transition:all 0.6s cubic-bezier(0.4,0,0.2,1); }
+        .stagger-children.active > *:nth-child(1){transition-delay:0s;opacity:1;transform:translateY(0)}
+        .stagger-children.active > *:nth-child(2){transition-delay:0.1s;opacity:1;transform:translateY(0)}
+        .stagger-children.active > *:nth-child(3){transition-delay:0.15s;opacity:1;transform:translateY(0)}
+        .stagger-children.active > *:nth-child(4){transition-delay:0.2s;opacity:1;transform:translateY(0)}
+        .stagger-children.active > *:nth-child(5){transition-delay:0.25s;opacity:1;transform:translateY(0)}
+        .stagger-children.active > *:nth-child(6){transition-delay:0.3s;opacity:1;transform:translateY(0)}
+        .stagger-children.active > *:nth-child(7){transition-delay:0.35s;opacity:1;transform:translateY(0)}
+
+        /* ============================================================
+           🔃 LOADING SCREEN
+        ============================================================ */
+        .loader {
+            position:fixed; inset:0; background:var(--bg-primary); z-index:100006;
+            display:flex; align-items:center; justify-content:center;
+            flex-direction:column; gap:25px;
+            transition:opacity 0.6s ease, visibility 0.6s ease;
+        }
+        .loader.hidden { opacity:0; visibility:hidden; }
+        .loader-logo { font-size: 3rem; animation: loaderSpin 2s infinite ease-in-out; }
+        @keyframes loaderSpin { 0%,100%{transform:scale(1) rotate(0)} 50%{transform:scale(1.2) rotate(10deg)} }
+        .loader-bar {
+            width: 200px; height: 6px; background: var(--border-color);
+            border-radius: 3px; overflow: hidden;
+        }
+        .loader-fill {
+            height: 100%; width: 0%;
+            background: linear-gradient(90deg, var(--coral), var(--sun), var(--grass), var(--sky), var(--lavender));
+            border-radius: 3px; animation: loaderFill 1.5s ease-in-out forwards;
+        }
+        @keyframes loaderFill { to{width:100%} }
+        .loader-text { font-weight:800; font-size:1.1rem; letter-spacing:1px; }
+
+        /* ============================================================
+           📱 RESPONSIVE
+        ============================================================ */
+        @media(max-width:1024px) {
+            .hero-content{grid-template-columns:1fr;text-align:center;gap:40px}
+            .hero-subtitle{margin:0 auto 35px} .hero-buttons{justify-content:center}
+            .hero-visual{order:-1} .hero-illustration{max-width:380px}
+            .about-grid{grid-template-columns:1fr;gap:40px}
+            .contact-grid{grid-template-columns:1fr}
+            .footer-grid{grid-template-columns:1fr 1fr;gap:30px}
+            .stats-grid{grid-template-columns:repeat(2,1fr)}
+            .gallery-grid{grid-template-columns:repeat(2,1fr)}
+            .timeline::before{left:30px}
+            .timeline-item,.timeline-item:nth-child(odd){flex-direction:row}
+            .timeline-dot{left:30px}
+            .timeline-item .timeline-content,.timeline-item:nth-child(odd) .timeline-content{text-align:left;margin-left:60px;margin-right:0;width:auto}
+        }
+        @media(max-width:768px) {
+            .navbar{padding:12px 20px}
+            .nav-center {
+                display:none; position:fixed; top:0; left:0; width:100%; height:100vh;
+                background:var(--glass-bg); backdrop-filter:blur(25px);
+                flex-direction:column; justify-content:center; align-items:center;
+                gap:15px; z-index:1000; list-style:none;
+            }
+            .nav-center.open{display:flex}
+            .nav-center a{font-size:1.2rem;padding:15px 30px}
+            .hamburger{display:flex}
+            .hero{padding:120px 20px 60px}
+            section{padding:60px 20px !important}
+            .programs-grid{grid-template-columns:1fr}
+            .teachers-grid{grid-template-columns:1fr 1fr}
+            .form-row{grid-template-columns:1fr}
+            .about-features{grid-template-columns:1fr}
+            .footer-grid{grid-template-columns:1fr;gap:30px}
+            .event-item{flex-direction:column}
+            .stats-grid{grid-template-columns:1fr 1fr}
+            .gallery-grid{grid-template-columns:1fr 1fr}
+            .gallery-item.span-2{grid-column:span 1}
+            .hero-card{padding:14px 18px}
+            .hero-card-icon{width:40px;height:40px;font-size:18px}
+            .hero-card-text h4{font-size:0.78rem} .hero-card-text p{font-size:0.7rem}
+            .cursor-follower{display:none}
+            .cookie-banner{flex-direction:column;text-align:center}
+            .newsletter-popup{left:10px;right:10px;max-width:none}
+            .nav-right .nav-cta-link { display: none; }
+        }
+        @media(max-width:480px) {
+            .hero-title{font-size:2rem}
+            .teachers-grid{grid-template-columns:1fr}
+            .hero-illustration{max-width:300px}
+            .hero-card:nth-child(4){display:none}
+            .stats-grid{grid-template-columns:1fr}
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 🔃 LOADING SCREEN -->
+    <div class="loader" id="loader">
+        <div class="loader-logo">🌈</div>
+        <div class="loader-bar"><div class="loader-fill"></div></div>
+        <div class="loader-text">Arc-en-Ciel</div>
+    </div>
+
+    <!-- ✨ CURSOR -->
+    <div class="cursor-follower" id="cursor"></div>
+
+    <!-- 🎉 CONFETTI CANVAS -->
+    <canvas id="confettiCanvas"></canvas>
+
+    <!-- 🔮 FLOATING SHAPES -->
+    <div class="floating-shapes">
+        <div class="shape"></div><div class="shape"></div><div class="shape"></div>
+        <div class="shape"></div><div class="shape"></div>
+    </div>
+
+    <!-- 🌈 RAINBOW BAR + SCROLL PROGRESS -->
+    <div class="rainbow-bar"></div>
+    <div class="scroll-progress" id="scrollProgress"></div>
+
+    <!-- 📢 ANNOUNCEMENT BAR -->
+    <div class="announcement-bar" id="announceBar">
+        <span class="live-dot" style="width:8px;height:8px;background:#4ECB71;border-radius:50%;animation:livePulse 1.5s infinite;display:inline-block;"></span>
+        📣 Rentrée 2025 — Portes ouvertes le 15 sept. &nbsp;|&nbsp; Places limitées !
+        <button class="close-announce" onclick="closeAnnounce()">✕</button>
+    </div>
+
+    <!-- 🧭 NAVBAR -->
+    <nav class="navbar has-announce" id="navbar">
+        <a href="#" class="nav-logo">
+            <div class="nav-logo-icon">🌈</div>
+            <div class="nav-logo-text"><span>Arc-en-Ciel</span></div>
+        </a>
+        <ul class="nav-center" id="navLinks">
+            <li><a href="#accueil">Accueil</a></li>
+            <li><a href="#apropos">À propos</a></li>
+            <li><a href="#galerie">Galerie</a></li>
+            <li><a href="#programmes">Programmes</a></li>
+            <li><a href="#equipe">Équipe</a></li>
+            <li><a href="#faq">FAQ</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+        <div class="nav-right">
+            <button class="sound-toggle" id="soundToggle" title="Sons">🔇</button>
+            <button class="theme-toggle" id="themeToggle" title="Mode sombre">🌙</button>
+            <a href="#contact" class="nav-cta nav-cta-link">Inscription ✨</a>
+            <button class="hamburger" id="hamburger">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ======================== HERO ======================== -->
+    <section class="hero" id="accueil">
+        <canvas id="particleCanvas"></canvas>
+        <div class="hero-bg-circles">
+            <div class="hero-circle"></div><div class="hero-circle"></div><div class="hero-circle"></div>
+        </div>
+        <div class="hero-content">
+            <div class="hero-text">
+                <div class="hero-badge">
+                    <span class="live-dot"></span> Inscriptions 2025–2026 ouvertes
+                </div>
+                <h1 class="hero-title">
+                    Où chaque enfant<br>
+                    <span class="highlight">
+                        <span class="typewriter-container">
+                            <span class="typewriter" id="typewriter"></span>
+                        </span>
+                    </span> ✨
+                </h1>
+                <p class="hero-subtitle">
+                    Une école primaire bienveillante et innovante où l'apprentissage se vit
+                    avec joie, créativité et curiosité. Du CP au CM2.
+                </p>
+                <div class="hero-buttons">
+                    <a href="#contact" class="btn btn-primary magnetic-btn" id="heroBtn">
+                        Inscrire mon enfant 🚀
+                    </a>
+                    <a href="#apropos" class="btn btn-secondary">
+                        Découvrir l'école 🏫
+                    </a>
+                    <button class="btn-play" id="playVideoBtn" title="Voir la vidéo">▶</button>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="hero-illustration" id="parallaxHero">
+                    <div class="hero-center-shape"></div>
+                    <div class="hero-card">
+                        <div class="hero-card-icon" style="background:rgba(255,107,107,0.1)">📚</div>
+                        <div class="hero-card-text"><h4>Pédagogie Active</h4><p>Apprendre en s'amusant</p></div>
+                    </div>
+                    <div class="hero-card">
+                        <div class="hero-card-icon" style="background:rgba(110,198,255,0.15)">🎨</div>
+                        <div class="hero-card-text"><h4>Arts & Créativité</h4><p>Expression libre</p></div>
+                    </div>
+                    <div class="hero-card">
+                        <div class="hero-card-icon" style="background:rgba(78,203,113,0.12)">🌱</div>
+                        <div class="hero-card-text"><h4>Éco-citoyen</h4><p>Jardin pédagogique</p></div>
+                    </div>
+                    <div class="hero-card">
+                        <div class="hero-card-icon" style="background:rgba(167,139,250,0.12)">🤖</div>
+                        <div class="hero-card-text"><h4>Numérique</h4><p>Initiation au code</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 🌊 WAVE -->
+    <div class="wave-separator">
+        <svg viewBox="0 0 1440 80" preserveAspectRatio="none">
+            <path fill="var(--bg-secondary)" d="M0,30 C360,80 720,0 1080,40 C1260,60 1380,20 1440,30 L1440,80 L0,80 Z"/>
+        </svg>
+    </div>
+
+    <!-- ======================== STATS ======================== -->
+    <section class="stats-section">
+        <div class="stats-grid stagger-children" id="statsGrid">
+            <div class="stat-card reveal-scale">
+                <span class="stat-icon">👧👦</span>
+                <div class="stat-number"><span class="counter" data-target="350">0</span></div>
+                <div class="stat-label">Élèves épanouis</div>
+            </div>
+            <div class="stat-card reveal-scale">
+                <span class="stat-icon">👩‍🏫</span>
+                <div class="stat-number"><span class="counter" data-target="25">0</span></div>
+                <div class="stat-label">Enseignants passionnés</div>
+            </div>
+            <div class="stat-card reveal-scale">
+                <span class="stat-icon">⭐</span>
+                <div class="stat-number"><span class="counter" data-target="98">0</span><span class="stat-suffix">%</span></div>
+                <div class="stat-label">Satisfaction parents</div>
+            </div>
+            <div class="stat-card reveal-scale">
+                <span class="stat-icon">🏆</span>
+                <div class="stat-number"><span class="counter" data-target="30">0</span></div>
+                <div class="stat-label">Ans d'excellence</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 🌊 WAVE -->
+    <div class="wave-separator flip">
+        <svg viewBox="0 0 1440 80" preserveAspectRatio="none">
+            <path fill="var(--bg-secondary)" d="M0,30 C360,80 720,0 1080,40 C1260,60 1380,20 1440,30 L1440,80 L0,80 Z"/>
+        </svg>
+    </div>
+
+    <!-- ======================== ABOUT ======================== -->
+    <section class="about" id="apropos">
+        <div class="about-grid">
+            <div class="about-visual reveal-left">
+                <div class="about-image-container">
+                    <div class="emoji-scene">👨‍👩‍👧‍👦</div>
+                    <div class="glass-badge">⭐ #1 du département</div>
+                    <div class="glass-badge">🌿 100% éco-responsable</div>
+                </div>
+            </div>
+            <div class="about-content reveal-right">
+                <div class="section-tag" style="background:rgba(255,107,107,0.1);color:var(--coral)">🏫 Notre école</div>
+                <h2>Un lieu où <span style="color:var(--coral)">grandir</span> rime avec <span style="color:var(--lavender)">s'épanouir</span></h2>
+                <p>Depuis 30 ans, l'École Arc-en-Ciel accompagne les enfants de 6 à 11 ans.
+                    Notre pédagogie unique combine rigueur académique et épanouissement personnel.</p>
+                <p>Classes à effectifs réduits (max 22 élèves), cadre verdoyant et stimulant.</p>
+                <div class="about-features stagger-children">
+                    <div class="about-feature"><span class="about-feature-icon">🎯</span><span class="about-feature-text">Suivi individualisé</span></div>
+                    <div class="about-feature"><span class="about-feature-icon">🌳</span><span class="about-feature-text">Campus verdoyant</span></div>
+                    <div class="about-feature"><span class="about-feature-icon">🍽️</span><span class="about-feature-text">Cantine bio & locale</span></div>
+                    <div class="about-feature"><span class="about-feature-icon">🚌</span><span class="about-feature-text">Transport scolaire</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================== GALLERY ======================== -->
+    <section class="gallery" id="galerie">
+        <div class="section-header reveal">
+            <div class="section-tag" style="background:rgba(244,114,182,0.1);color:var(--pink)">📸 Galerie</div>
+            <h2 class="section-title">La vie à l'école en images</h2>
+            <p class="section-desc">Des moments de joie, de découverte et de partage capturés au quotidien.</p>
+        </div>
+        <div class="gallery-grid stagger-children">
+            <div class="gallery-item span-2" data-title="Salle de classe" data-desc="Nos espaces lumineux et colorés favorisent l'apprentissage." data-emoji="🏫" onclick="openLightbox(this)">🏫</div>
+            <div class="gallery-item" data-title="Arts plastiques" data-desc="Chaque enfant exprime sa créativité." data-emoji="🎨" onclick="openLightbox(this)">🎨</div>
+            <div class="gallery-item span-row" data-title="Jardin pédagogique" data-desc="Les élèves cultivent fruits et légumes bio." data-emoji="🌻" onclick="openLightbox(this)">🌻</div>
+            <div class="gallery-item" data-title="Sport" data-desc="Gymnastique, athlétisme et jeux collectifs." data-emoji="⚽" onclick="openLightbox(this)">⚽</div>
+            <div class="gallery-item" data-title="Bibliothèque" data-desc="Plus de 5000 livres à disposition." data-emoji="📚" onclick="openLightbox(this)">📚</div>
+            <div class="gallery-item span-2" data-title="Spectacle annuel" data-desc="Théâtre, danse et chorale réunis." data-emoji="🎭" onclick="openLightbox(this)">🎭</div>
+        </div>
+    </section>
+
+    <!-- LIGHTBOX -->
+    <div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+        <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+        <div class="lightbox-content" onclick="event.stopPropagation()">
+            <div class="lightbox-emoji" id="lbEmoji">🏫</div>
+            <h3 class="lightbox-title" id="lbTitle">Titre</h3>
+            <p class="lightbox-desc" id="lbDesc">Description</p>
+        </div>
+    </div>
+
+    <!-- ======================== PROGRAMS ======================== -->
+    <section class="programs" id="programmes">
+        <div class="section-header reveal">
+            <div class="section-tag" style="background:rgba(110,198,255,0.12);color:var(--ocean)">📖 Nos programmes</div>
+            <h2 class="section-title">Un apprentissage riche & complet</h2>
+            <p class="section-desc">Des programmes innovants pour développer toutes les facettes du potentiel.</p>
+        </div>
+        <div class="programs-grid stagger-children">
+            <div class="program-card"><div class="program-icon">📐</div><h3>Mathématiques & Sciences</h3><p>Approche Singapour — manipulation et pensée logique.</p><span class="program-tag">CP – CM2</span></div>
+            <div class="program-card"><div class="program-icon">📝</div><h3>Français & Littérature</h3><p>Lecture, écriture créative, théâtre.</p><span class="program-tag">CP – CM2</span></div>
+            <div class="program-card"><div class="program-icon">🌍</div><h3>Langues Vivantes</h3><p>Anglais dès le CP avec intervenant natif.</p><span class="program-tag">Bilingue</span></div>
+            <div class="program-card"><div class="program-icon">🎨</div><h3>Arts & Culture</h3><p>Arts plastiques, musique, chorale.</p><span class="program-tag">Créativité</span></div>
+            <div class="program-card"><div class="program-icon">⚽</div><h3>Sport & Bien-être</h3><p>Natation, yoga enfant, jeux coopératifs.</p><span class="program-tag">Santé</span></div>
+            <div class="program-card"><div class="program-icon">💻</div><h3>Numérique & Code</h3><p>Scratch, robotique, citoyenneté numérique.</p><span class="program-tag">Innovation</span></div>
+        </div>
+    </section>
+
+    <!-- ======================== TIMELINE ======================== -->
+    <section class="timeline-section">
+        <div class="section-header reveal">
+            <div class="section-tag" style="background:rgba(255,217,61,0.15);color:#B8860B">🕰️ Notre histoire</div>
+            <h2 class="section-title">30 ans d'aventures</h2>
+        </div>
+        <div class="timeline stagger-children">
+            <div class="timeline-item reveal-left">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <div class="timeline-year">1994</div>
+                    <h3>🌱 Fondation</h3>
+                    <p>L'école ouvre ses portes avec 2 classes et 40 élèves passionnés.</p>
+                </div>
+            </div>
+            <div class="timeline-item reveal-right">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <div class="timeline-year">2005</div>
+                    <h3>🏗️ Extension</h3>
+                    <p>Nouveau bâtiment, gymnase et jardin pédagogique inaugurés.</p>
+                </div>
+            </div>
+            <div class="timeline-item reveal-left">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <div class="timeline-year">2015</div>
+                    <h3>🏆 Label Éco-École</h3>
+                    <p>Obtention du label international pour notre engagement environnemental.</p>
+                </div>
+            </div>
+            <div class="timeline-item reveal-right">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <div class="timeline-year">2024</div>
+                    <h3>🚀 Numérique</h3>
+                    <p>Lancement du programme d'initiation au code et à la robotique.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================== TEACHERS — 3D FLIP ======================== -->
+    <section class="teachers" id="equipe">
+        <div class="section-header reveal">
+            <div class="section-tag" style="background:rgba(78,203,113,0.1);color:var(--grass)">👩‍🏫 Notre équipe</div>
+            <h2 class="section-title">Des enseignants passionnés</h2>
+            <p class="section-desc">Survolez pour en savoir plus !</p>
+        </div>
+        <div class="teachers-grid stagger-children">
+            <div class="teacher-card-wrapper">
+                <div class="teacher-card">
+                    <div class="teacher-front">
+                        <div class="teacher-avatar">👩‍🏫</div>
+                        <h3>Marie Dupont</h3>
+                        <p class="role">Directrice & CP</p>
+                        <p class="flip-hint">↻ Survolez-moi</p>
+                    </div>
+                    <div class="teacher-back">
+                        <h3>Marie Dupont</h3>
+                        <p>20 ans d'expérience, spécialiste en pédagogie Montessori et passionnée de littérature jeunesse.</p>
+                        <div class="teacher-skills"><span class="skill-tag">Montessori</span><span class="skill-tag">Lecture</span><span class="skill-tag">Bienveillance</span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="teacher-card-wrapper">
+                <div class="teacher-card">
+                    <div class="teacher-front">
+                        <div class="teacher-avatar">👨‍🏫</div>
+                        <h3>Lucas Martin</h3>
+                        <p class="role">CE1 – CE2</p>
+                        <p class="flip-hint">↻ Survolez-moi</p>
+                    </div>
+                    <div class="teacher-back">
+                        <h3>Lucas Martin</h3>
+                        <p>Passionné de sciences et d'expériences, il rend chaque cours magique et interactif.</p>
+                        <div class="teacher-skills"><span class="skill-tag">Sciences</span><span class="skill-tag">Expériences</span><span class="skill-tag">Créativité</span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="teacher-card-wrapper">
+                <div class="teacher-card">
+                    <div class="teacher-front">
+                        <div class="teacher-avatar">👩‍💻</div>
+                        <h3>Sophie Bernard</h3>
+                        <p class="role">CM1 – CM2</p>
+                        <p class="flip-hint">↻ Survolez-moi</p>
+                    </div>
+                    <div class="teacher-back">
+                        <h3>Sophie Bernard</h3>
+                        <p>Experte en numérique éducatif et projets interdisciplinaires innovants.</p>
+                        <div class="teacher-skills"><span class="skill-tag">Numérique</span><span class="skill-tag">Projets</span><span class="skill-tag">Innovation</span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="teacher-card-wrapper">
+                <div class="teacher-card">
+                    <div class="teacher-front">
+                        <div class="teacher-avatar">🧑‍🎨</div>
+                        <h3>Thomas Petit</h3>
+                        <p class="role">Arts & Musique</p>
+                        <p class="flip-hint">↻ Survolez-moi</p>
+                    </div>
+                    <div class="teacher-back">
+                        <h3>Thomas Petit</h3>
+                        <p>Artiste et musicien, il éveille la créativité et le sens esthétique des enfants.</p>
+                        <div class="teacher-skills"><span class="skill-tag">Peinture</span><span class="skill-tag">Musique</span><span class="skill-tag">Théâtre</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================== EVENTS ======================== -->
+    <section class="events" id="evenements">
+        <div class="section-header reveal">
+            <div class="section-tag" style="background:rgba(167,139,250,0.1);color:var(--lavender)">📅 Événements</div>
+            <h2 class="section-title">Prochains rendez-vous</h2>
+        </div>
+        <div class="events-container stagger-children">
+            <div class="event-item"><div class="event-date"><div class="day">15</div><div class="month">Sept</div></div><div class="event-info"><h3>🎉 Journée Portes Ouvertes</h3><p>Découvrez nos locaux et rencontrez l'équipe.</p><div class="event-meta"><span>🕐 9h–17h</span><span>📍 Campus</span></div></div></div>
+            <div class="event-item"><div class="event-date"><div class="day">02</div><div class="month">Oct</div></div><div class="event-info"><h3>🍂 Fête de l'Automne</h3><p>Ateliers nature et récolte au jardin.</p><div class="event-meta"><span>🕐 14h–18h</span><span>📍 Jardin</span></div></div></div>
+            <div class="event-item"><div class="event-date"><div class="day">18</div><div class="month">Nov</div></div><div class="event-info"><h3>🔬 Semaine des Sciences</h3><p>Expériences et concours d'inventions.</p><div class="event-meta"><span>🕐 Semaine</span><span>📍 Labo</span></div></div></div>
+            <div class="event-item"><div class="event-date"><div class="day">20</div><div class="month">Déc</div></div><div class="event-info"><h3>🎄 Spectacle de Noël</h3><p>Chorale, théâtre et marché de Noël.</p><div class="event-meta"><span>🕐 18h–21h</span><span>📍 Salle des fêtes</span></div></div></div>
+        </div>
+    </section>
+
+    <!-- ======================== FAQ ======================== -->
+    <section class="faq" id="faq">
+        <div class="section-header reveal">
+            <div class="section-tag" style="background:rgba(59,130,246,0.1);color:var(--ocean)">❓ FAQ</div>
+            <h2 class="section-title">Questions fréquentes</h2>
+            <p class="section-desc">Tout ce que vous devez savoir avant d'inscrire votre enfant.</p>
+        </div>
+        <div class="faq-container stagger-children">
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    À partir de quel âge mon enfant peut-il intégrer l'école ?
+                    <span class="faq-icon">+</span>
+                </button>
+                <div class="faq-answer"><p>L'école accueille les enfants dès 6 ans (classe de CP). Une évaluation douce est proposée pour s'assurer que l'enfant est prêt pour l'entrée en primaire.</p></div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    Quels sont les horaires de l'école ?
+                    <span class="faq-icon">+</span>
+                </button>
+                <div class="faq-answer"><p>Les cours ont lieu de 8h30 à 16h30 (lundi, mardi, jeudi, vendredi). Le mercredi, les cours finissent à 12h. Le périscolaire est disponible de 7h30 à 18h30.</p></div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    Y a-t-il une cantine ? Est-elle bio ?
+                    <span class="faq-icon">+</span>
+                </button>
+                <div class="faq-answer"><p>Oui ! Notre cantine propose des repas 100% bio et locaux. Les menus sont élaborés par une diététicienne. Nous prenons en charge toutes les allergies et régimes alimentaires.</p></div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    Quelle est la taille des classes ?
+                    <span class="faq-icon">+</span>
+                </button>
+                <div class="faq-answer"><p>Nos classes comptent maximum 22 élèves, ce qui permet un suivi personnalisé de chaque enfant. Un assistant pédagogique est présent dans chaque classe.</p></div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question" onclick="toggleFaq(this)">
+                    Comment se passe la procédure d'inscription ?
+                    <span class="faq-icon">+</span>
+                </button>
+                <div class="faq-answer"><p>Remplissez le formulaire de contact, nous vous recontacterons pour organiser une visite. Après la visite, un dossier d'inscription vous sera remis. L'admission est confirmée sous 2 semaines.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================== TESTIMONIALS CAROUSEL ======================== -->
+    <section class="testimonials">
+        <div class="section-header reveal">
+            <div class="section-tag" style="background:rgba(255,217,61,0.15);color:#B8860B">💬 Témoignages</div>
+            <h2 class="section-title">Ce que disent les parents</h2>
+        </div>
+        <div class="carousel-container reveal-scale">
+            <div class="carousel-track" id="carouselTrack">
+                <div class="carousel-slide">
+                    <div class="testimonial-card">
+                        <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+                        <p class="testimonial-text">« Notre fille a complètement changé depuis qu'elle est à Arc-en-Ciel. Elle adore aller à l'école et revient chaque soir avec des étoiles dans les yeux ! »</p>
+                        <div class="testimonial-author"><div class="testimonial-avatar">👩</div><div><div class="testimonial-name">Isabelle Moreau</div><div class="testimonial-role">Maman de Léa, CE2</div></div></div>
+                    </div>
+                </div>
+                <div class="carousel-slide">
+                    <div class="testimonial-card">
+                        <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+                        <p class="testimonial-text">« L'équipe pédagogique est exceptionnelle. Ils ont su détecter les talents de notre fils et l'accompagner avec bienveillance. Merci infiniment ! »</p>
+                        <div class="testimonial-author"><div class="testimonial-avatar">👨</div><div><div class="testimonial-name">Philippe Durand</div><div class="testimonial-role">Papa de Hugo, CM1</div></div></div>
+                    </div>
+                </div>
+                <div class="carousel-slide">
+                    <div class="testimonial-card">
+                        <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
+                        <p class="testimonial-text">« Le jardin pédagogique, les sorties culturelles, le code… Nos enfants apprennent tellement ici. Une école extraordinaire et bienveillante ! »</p>
+                        <div class="testimonial-author"><div class="testimonial-avatar">👩</div><div><div class="testimonial-name">Claire Lefevre</div><div class="testimonial-role">Maman de Tom & Emma</div></div></div>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-controls">
+                <button class="carousel-btn" onclick="moveCarousel(-1)">←</button>
+                <div class="carousel-dots" id="carouselDots">
+                    <button class="carousel-dot active" onclick="goToSlide(0)"></button>
+                    <button class="carousel-dot" onclick="goToSlide(1)"></button>
+                    <button class="carousel-dot" onclick="goToSlide(2)"></button>
+                </div>
+                <button class="carousel-btn" onclick="moveCarousel(1)">→</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================== CTA ======================== -->
+    <section class="cta-section">
+        <div class="cta-shapes"><div class="cta-shape"></div><div class="cta-shape"></div><div class="cta-shape"></div></div>
+        <div class="cta-content reveal-scale">
+            <h2>Prêt à offrir le meilleur à votre enfant ? 🌟</h2>
+            <p>Rejoignez la famille Arc-en-Ciel. Les inscriptions sont ouvertes !</p>
+            <div class="cta-buttons">
+                <a href="#contact" class="btn btn-cta-primary">Pré-inscrire mon enfant ✨</a>
+                <a href="#" class="btn btn-cta-secondary">Télécharger la brochure 📄</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================== CONTACT ======================== -->
+    <section class="contact" id="contact">
+        <div class="section-header reveal">
+            <div class="section-tag" style="background:rgba(244,114,182,0.1);color:var(--pink)">✉️ Contact</div>
+            <h2 class="section-title">Parlons de l'avenir de votre enfant</h2>
+        </div>
+        <div class="contact-grid">
+            <div class="reveal-left">
+                <div class="contact-info-cards stagger-children">
+                    <div class="contact-info-card"><div class="contact-info-icon">📍</div><div><h4>Adresse</h4><p>12 Rue des Lilas, 75015 Paris</p></div></div>
+                    <div class="contact-info-card"><div class="contact-info-icon">📞</div><div><h4>Téléphone</h4><p>01 23 45 67 89</p></div></div>
+                    <div class="contact-info-card"><div class="contact-info-icon">✉️</div><div><h4>Email</h4><p>contact@ecole-arcenciel.fr</p></div></div>
+                    <div class="contact-info-card"><div class="contact-info-icon">🕐</div><div><h4>Horaires</h4><p>Lun–Ven : 8h00 – 18h30</p></div></div>
+                </div>
+                <div class="map-container" onclick="window.open('#','_blank')">📍</div>
+            </div>
+            <div class="contact-form reveal-right">
+                <form id="contactForm">
+                    <div class="form-row">
+                        <div class="form-group"><label>Prénom</label><input type="text" placeholder="Votre prénom" required></div>
+                        <div class="form-group"><label>Nom</label><input type="text" placeholder="Votre nom" required></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group"><label>Email</label><input type="email" placeholder="votre@email.fr" required></div>
+                        <div class="form-group"><label>Téléphone</label><input type="tel" placeholder="06 12 34 56 78"></div>
+                    </div>
+                    <div class="form-group">
+                        <label>Niveau souhaité</label>
+                        <select><option value="">Sélectionner…</option><option>CP</option><option>CE1</option><option>CE2</option><option>CM1</option><option>CM2</option></select>
+                    </div>
+                    <div class="form-group"><label>Message</label><textarea placeholder="Parlez-nous de votre enfant…"></textarea></div>
+                    <button type="submit" class="btn-submit">Envoyer la demande 🚀</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================== FOOTER ======================== -->
+    <footer class="footer">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <div class="nav-logo-icon" style="margin-bottom:15px">🌈</div>
+                <h3 style="font-size:1.3rem;margin-bottom:10px">École Arc-en-Ciel</h3>
+                <p>Éduquer avec passion, accompagner avec bienveillance, inspirer avec créativité depuis 1994.</p>
+                <div class="footer-socials">
+                    <a href="#" class="footer-social-link">📘</a>
+                    <a href="#" class="footer-social-link">📸</a>
+                    <a href="#" class="footer-social-link">🐦</a>
+                    <a href="#" class="footer-social-link">📺</a>
+                </div>
+            </div>
+            <div class="footer-column"><h4>Navigation</h4><ul><li><a href="#accueil">→ Accueil</a></li><li><a href="#apropos">→ À propos</a></li><li><a href="#programmes">→ Programmes</a></li><li><a href="#equipe">→ Équipe</a></li><li><a href="#faq">→ FAQ</a></li></ul></div>
+            <div class="footer-column"><h4>Services</h4><ul><li><a href="#">→ Cantine bio</a></li><li><a href="#">→ Périscolaire</a></li><li><a href="#">→ Transport</a></li><li><a href="#">→ Aide aux devoirs</a></li></ul></div>
+            <div class="footer-column"><h4>Informations</h4><ul><li><a href="#">→ Tarifs</a></li><li><a href="#">→ Inscription</a></li><li><a href="#">→ Règlement</a></li><li><a href="#">→ Mentions légales</a></li></ul></div>
+        </div>
+        <div class="footer-bottom"><p>© 2025 École Arc-en-Ciel. Fait avec ❤️ | <a href="#">Confidentialité</a></p></div>
+    </footer>
+
+    <!-- 🔝 BACK TO TOP -->
+    <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+    <!-- 📰 NEWSLETTER POPUP -->
+    <div class="newsletter-popup" id="nlPopup">
+        <button class="close-nl" onclick="document.getElementById('nlPopup').classList.remove('visible')">✕</button>
+        <h3>📬 Restez informé !</h3>
+        <p>Recevez les actualités de l'école et les dates importantes directement par email.</p>
+        <div class="nl-form">
+            <input type="email" placeholder="votre@email.fr">
+            <button onclick="this.textContent='✅';setTimeout(()=>document.getElementById('nlPopup').classList.remove('visible'),1500)">OK</button>
+        </div>
+    </div>
+
+    <!-- 🍪 COOKIE BANNER -->
+    <div class="cookie-banner" id="cookieBanner">
+        <p>🍪 Nous utilisons des cookies pour améliorer votre expérience. <a href="#">En savoir plus</a></p>
+        <div class="cookie-buttons">
+            <button class="cookie-btn cookie-decline" onclick="closeCookie()">Refuser</button>
+            <button class="cookie-btn cookie-accept" onclick="closeCookie()">Accepter ✓</button>
+        </div>
+    </div>
+
+    <!-- 🎬 VIDEO MODAL -->
+    <div class="video-modal" id="videoModal" onclick="closeVideo(event)">
+        <button class="lightbox-close" onclick="closeVideoBtn()">✕</button>
+        <div class="video-placeholder" onclick="event.stopPropagation()">
+            <div class="play-icon">🎬</div>
+            <h3 style="color:white">Visite virtuelle de l'école</h3>
+            <p>Vidéo de présentation — 3 minutes</p>
+        </div>
+    </div>
+
+    <!-- ======================== JAVASCRIPT ======================== -->
+    <script>
+    // ===== LOADER =====
+    window.addEventListener('load', () => {
+        setTimeout(() => document.getElementById('loader').classList.add('hidden'), 1800);
+    });
+
+    // ===== CURSOR =====
+    const cursor = document.getElementById('cursor');
+    document.addEventListener('mousemove', e => {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+    });
+    document.querySelectorAll('a, button, .program-card, .teacher-card-wrapper, .event-item, .gallery-item, .faq-question').forEach(el => {
+        el.addEventListener('mouseenter', () => cursor.classList.add('active'));
+        el.addEventListener('mouseleave', () => cursor.classList.remove('active'));
+    });
+
+    // ===== SCROLL PROGRESS =====
+    window.addEventListener('scroll', () => {
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = (scrollTop / docHeight) * 100;
+        document.getElementById('scrollProgress').style.width = progress + '%';
+    });
+
+    // ===== ANNOUNCEMENT BAR =====
+    function closeAnnounce() {
+        document.getElementById('announceBar').classList.add('hidden');
+        document.getElementById('navbar').classList.remove('has-announce');
+    }
+
+    // ===== NAVBAR SCROLL =====
+    const navbar = document.getElementById('navbar');
+    const backToTop = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+        navbar.classList.toggle('scrolled', window.scrollY > 50);
+        backToTop.classList.toggle('visible', window.scrollY > 500);
+    });
+
+    // ===== HAMBURGER =====
+    const hamburger = document.getElementById('hamburger');
+    const navLinks = document.getElementById('navLinks');
+    hamburger.addEventListener('click', () => {
+        hamburger.classList.toggle('active');
+        navLinks.classList.toggle('open');
+    });
+    navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+        hamburger.classList.remove('active');
+        navLinks.classList.remove('open');
+    }));
+
+    // ===== DARK MODE =====
+    const themeToggle = document.getElementById('themeToggle');
+    let isDark = false;
+    themeToggle.addEventListener('click', () => {
+        isDark = !isDark;
+        document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+        themeToggle.textContent = isDark ? '☀️' : '🌙';
+        if (soundOn) playTick();
+    });
+
+    // ===== SOUND TOGGLE =====
+    let soundOn = false;
+    const soundToggle = document.getElementById('soundToggle');
+    soundToggle.addEventListener('click', () => {
+        soundOn = !soundOn;
+        soundToggle.textContent = soundOn ? '🔊' : '🔇';
+    });
+    function playTick() {
+        if (!soundOn) return;
+        try {
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain); gain.connect(ctx.destination);
+            osc.frequency.value = 800; osc.type = 'sine';
+            gain.gain.setValueAtTime(0.1, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
+            osc.start(); osc.stop(ctx.currentTime + 0.1);
+        } catch(e) {}
+    }
+
+    // ===== TYPEWRITER =====
+    const words = ['brille', 'grandit', 'explore', 'rêve', 's\'épanouit', 'crée'];
+    let wordIdx = 0, charIdx = 0, deleting = false;
+    const tw = document.getElementById('typewriter');
+    function typewrite() {
+        const word = words[wordIdx];
+        tw.textContent = word.substring(0, charIdx);
+        if (!deleting) {
+            charIdx++;
+            if (charIdx > word.length) { deleting = true; setTimeout(typewrite, 2000); return; }
+        } else {
+            charIdx--;
+            if (charIdx === 0) { deleting = false; wordIdx = (wordIdx + 1) % words.length; }
+        }
+        setTimeout(typewrite, deleting ? 50 : 120);
+    }
+    setTimeout(typewrite, 2000);
+
+    // ===== SCROLL REVEAL =====
+    const revealEls = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale, .stagger-children');
+    function revealOnScroll() {
+        revealEls.forEach(el => {
+            if (el.getBoundingClientRect().top < window.innerHeight - 80) el.classList.add('active');
+        });
+    }
+    window.addEventListener('scroll', revealOnScroll);
+    window.addEventListener('load', () => setTimeout(revealOnScroll, 100));
+
+    // ===== ANIMATED COUNTERS =====
+    let counterDone = false;
+    function animateCounters() {
+        if (counterDone) return;
+        const grid = document.getElementById('statsGrid');
+        if (grid.getBoundingClientRect().top < window.innerHeight - 50) {
+            counterDone = true;
+            document.querySelectorAll('.counter').forEach(c => {
+                const target = +c.dataset.target;
+                let current = 0;
+                const step = target / 80;
+                const timer = setInterval(() => {
+                    current += step;
+                    if (current >= target) { c.textContent = target; clearInterval(timer); }
+                    else c.textContent = Math.floor(current);
+                }, 20);
+            });
+        }
+    }
+    window.addEventListener('scroll', animateCounters);
+
+    // ===== PARALLAX HERO =====
+    const parallaxHero = document.getElementById('parallaxHero');
+    document.addEventListener('mousemove', e => {
+        const x = (e.clientX / window.innerWidth - 0.5) * 2;
+        const y = (e.clientY / window.innerHeight - 0.5) * 2;
+        if (parallaxHero) {
+            parallaxHero.querySelectorAll('.hero-card').forEach((card, i) => {
+                const d = (i + 1) * 8;
+                card.style.transform = `translate(${x*d}px, ${y*d}px)`;
+            });
+            const cs = parallaxHero.querySelector('.hero-center-shape');
+            if (cs) cs.style.transform = `translate(calc(-50% + ${x*15}px), calc(-50% + ${y*15}px))`;
+        }
+        document.querySelectorAll('.floating-shapes .shape').forEach((s, i) => {
+            s.style.transform = `translate(${x*(i+1)*5}px, ${y*(i+1)*5}px)`;
+        });
+    });
+
+    // ===== MAGNETIC BUTTON =====
+    const heroBtn = document.getElementById('heroBtn');
+    if (heroBtn) {
+        heroBtn.addEventListener('mousemove', e => {
+            const r = heroBtn.getBoundingClientRect();
+            const x = e.clientX - r.left - r.width / 2;
+            const y = e.clientY - r.top - r.height / 2;
+            heroBtn.style.transform = `translate(${x*0.3}px, ${y*0.3}px) scale(1.02)`;
+        });
+        heroBtn.addEventListener('mouseleave', () => { heroBtn.style.transform = ''; });
+        heroBtn.addEventListener('click', e => {
+            const ripple = document.createElement('span');
+            ripple.classList.add('ripple');
+            const r = heroBtn.getBoundingClientRect();
+            ripple.style.left = (e.clientX - r.left) + 'px';
+            ripple.style.top = (e.clientY - r.top) + 'px';
+            ripple.style.width = ripple.style.height = '10px';
+            heroBtn.appendChild(ripple);
+            setTimeout(() => ripple.remove(), 600);
+            if (soundOn) playTick();
+        });
+    }
+
+    // ===== TILT ON PROGRAM CARDS =====
+    document.querySelectorAll('.program-card').forEach(card => {
+        card.addEventListener('mousemove', e => {
+            const r = card.getBoundingClientRect();
+            const rx = (e.clientY - r.top - r.height/2) / 15;
+            const ry = (r.left + r.width/2 - e.clientX) / 15;
+            card.style.transform = `perspective(800px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-8px)`;
+        });
+        card.addEventListener('mouseleave', () => { card.style.transform = ''; });
+        card.addEventListener('mouseenter', () => { if(soundOn) playTick(); });
+    });
+
+    // ===== FAQ ACCORDION =====
+    function toggleFaq(btn) {
+        const item = btn.parentElement;
+        const wasActive = item.classList.contains('active');
+        document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
+        if (!wasActive) item.classList.add('active');
+        if (soundOn) playTick();
+    }
+
+    // ===== CAROUSEL =====
+    let currentSlide = 0;
+    const track = document.getElementById('carouselTrack');
+    const totalSlides = document.querySelectorAll('.carousel-slide').length;
+
+    function moveCarousel(dir) {
+        currentSlide = (currentSlide + dir + totalSlides) % totalSlides;
+        updateCarousel();
+        if (soundOn) playTick();
+    }
+    function goToSlide(idx) { currentSlide = idx; updateCarousel(); }
+    function updateCarousel() {
+        track.style.transform = `translateX(-${currentSlide * 100}%)`;
+        document.querySelectorAll('.carousel-dot').forEach((d, i) => d.classList.toggle('active', i === currentSlide));
+    }
+    // Auto-play
+    setInterval(() => moveCarousel(1), 6000);
+
+    // ===== GALLERY LIGHTBOX =====
+    function openLightbox(el) {
+        document.getElementById('lbEmoji').textContent = el.dataset.emoji;
+        document.getElementById('lbTitle').textContent = el.dataset.title;
+        document.getElementById('lbDesc').textContent = el.dataset.desc;
+        document.getElementById('lightbox').classList.add('open');
+        if (soundOn) playTick();
+    }
+    function closeLightbox(e) {
+        if (e && e.target !== document.getElementById('lightbox') && !e.target.classList.contains('lightbox-close')) return;
+        document.getElementById('lightbox').classList.remove('open');
+    }
+
+    // ===== VIDEO MODAL =====
+    document.getElementById('playVideoBtn').addEventListener('click', () => {
+        document.getElementById('videoModal').classList.add('open');
+        if (soundOn) playTick();
+    });
+    function closeVideo(e) {
+        if (e.target === document.getElementById('videoModal')) document.getElementById('videoModal').classList.remove('open');
+    }
+    function closeVideoBtn() { document.getElementById('videoModal').classList.remove('open'); }
+
+    // ===== FORM + CONFETTI =====
+    document.getElementById('contactForm').addEventListener('submit', e => {
+        e.preventDefault();
+        const btn = e.target.querySelector('.btn-submit');
+        btn.textContent = '✅ Demande envoyée !';
+        btn.style.background = 'linear-gradient(135deg, #4ECB71, #34D399)';
+        launchConfetti();
+        setTimeout(() => {
+            btn.textContent = 'Envoyer la demande 🚀';
+            btn.style.background = '';
+            e.target.reset();
+        }, 4000);
+    });
+
+    // ===== CONFETTI =====
+    function launchConfetti() {
+        const canvas = document.getElementById('confettiCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const colors = ['#FF6B6B','#FFD93D','#4ECB71','#6EC6FF','#A78BFA','#F472B6'];
+        const pieces = Array.from({length: 150}, () => ({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height - canvas.height,
+            w: Math.random() * 10 + 5,
+            h: Math.random() * 6 + 3,
+            color: colors[Math.floor(Math.random() * colors.length)],
+            vy: Math.random() * 3 + 2,
+            vx: Math.random() * 4 - 2,
+            rot: Math.random() * 360,
+            vr: Math.random() * 10 - 5
+        }));
+        let frame = 0;
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            pieces.forEach(p => {
+                p.y += p.vy; p.x += p.vx; p.rot += p.vr;
+                ctx.save();
+                ctx.translate(p.x, p.y);
+                ctx.rotate(p.rot * Math.PI / 180);
+                ctx.fillStyle = p.color;
+                ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
+                ctx.restore();
+            });
+            frame++;
+            if (frame < 200) requestAnimationFrame(draw);
+            else ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+        draw();
+    }
+
+    // ===== PARTICLE SYSTEM =====
+    (function() {
+        const canvas = document.getElementById('particleCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        function resize() { canvas.width = canvas.parentElement.offsetWidth; canvas.height = canvas.parentElement.offsetHeight; }
+        resize(); window.addEventListener('resize', resize);
+
+        for (let i = 0; i < 50; i++) {
+            particles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                r: Math.random() * 3 + 1,
+                vx: (Math.random() - 0.5) * 0.5,
+                vy: (Math.random() - 0.5) * 0.5,
+                alpha: Math.random() * 0.3 + 0.1
+            });
+        }
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.x += p.vx; p.y += p.vy;
+                if (p.x < 0) p.x = canvas.width; if (p.x > canvas.width) p.x = 0;
+                if (p.y < 0) p.y = canvas.height; if (p.y > canvas.height) p.y = 0;
+                ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(167, 139, 250, ${p.alpha})`;
+                ctx.fill();
+            });
+            requestAnimationFrame(animate);
+        }
+        animate();
+    })();
+
+    // ===== COOKIE BANNER =====
+    setTimeout(() => document.getElementById('cookieBanner').classList.add('visible'), 3000);
+    function closeCookie() { document.getElementById('cookieBanner').classList.remove('visible'); }
+
+    // ===== NEWSLETTER POPUP =====
+    setTimeout(() => document.getElementById('nlPopup').classList.add('visible'), 15000);
+
+    </script>
+</body>
+</html>
